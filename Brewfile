@@ -1,10 +1,27 @@
-cask_args appdir: "/Applications"
+tap "homebrew/bundle"
+tap "homebrew/services"
 tap "caskroom/cask"
-tap "telemachus/brew", "https://telemachus@bitbucket.org/telemachus/brew.git"
-brew "imagemagick"
-brew "mysql@5.6", restart_service: true, link: true, conflicts_with: ["mysql"]
-brew "emacs", args: ["with-cocoa", "with-gnutls"]
-cask "google-chrome"
-cask "java" unless system "/usr/libexec/java_home --failfast"
-cask "firefox", args: { appdir: "~/my-apps/Applications" }
-mas "1Password", id: 443987910
+brew "readline"
+brew "emacs"
+brew "git"
+brew "figlet"
+brew "heroku"
+brew "lighttpd"
+brew "mongodb", restart_service: true
+brew "nano"
+brew "nvm"
+brew "phantomjs"
+brew "sqlite"
+brew "postgresql", restart_service: true
+brew "rbenv"
+brew "redis"
+brew "rsync"
+brew "ssh-copy-id"
+brew "tidy-html5"
+brew "tig"
+brew "tree"
+brew "yarn"
+cask "postman"
+cask "slack"
+cask "spectacle"
+cask "sublime-text"

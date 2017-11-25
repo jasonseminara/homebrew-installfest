@@ -5,8 +5,14 @@ class Installfest < Formula
   version "2"
   sha256 "25a28dcf3662bb70dc2120749777370dd451370882f6216901c3b1185e7c1704"
 
-  depends_on "tig"
-  depends_on "rbenv"
 
-  def install; end
+  bottle :unneeded
+
+  def install
+    ohai "#{Tty.blue}Welcome to the Installfest!"
+    irb
+    #install nvm by hand
+
+
+  end
 end

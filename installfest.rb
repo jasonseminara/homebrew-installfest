@@ -10,9 +10,10 @@ class Installfest < Formula
 
   def install
     ohai "#{Tty.blue}Welcome to the Installfest!"
-    irb
+   
     #install nvm by hand
-
+    # configure and copy git aliases
+    # do some other magic
 
   end
 end

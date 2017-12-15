@@ -8,12 +8,18 @@ class Installfest < Formula
 
   bottle :unneeded
 
+  resource "nvm" do
+    url "https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh"
+  end
+
   def install
     ohai "#{Tty.blue}Welcome to the Installfest!"
-   
+
+
     #install nvm by hand
     # configure and copy git aliases
     # do some other magic
 
+    resource('nvm').install
   end
 end

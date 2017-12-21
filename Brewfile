@@ -14,6 +14,8 @@ brew "phantomjs"
 brew "sqlite"
 brew "postgresql", restart_service: true
 brew "rbenv"
+brew "rbenv-default-gems"
+brew "ruby-build"
 brew "redis"
 brew "rsync"
 brew "ssh-copy-id"

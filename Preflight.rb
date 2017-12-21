@@ -1,22 +1,6 @@
-class Installfest < Formula
-  desc "The premiere installer for WDI NYC"
-  homepage "https://git.generalassemb.ly/wdi-nyc/installfest"
-  url "https://git.generalassemb.ly/wdi-nyc/installfest/archive/master.zip"
-  version "2"
-  sha256 "6e033713d93dce57ab80207b3c9a9076e37d6b4339bc7f476ae2b6b2af3529f4"
-
-
-  bottle :unneeded
-
-  depends_on "git"
-
+class Preflight < Formula
 
   def install
-    ohai "#{Tty.blue}Welcome to the Installfest!"
-
-    #######
-    ### pre-flight
-
     # check for admin
     ohai "Pre-Flight..."
     ohai "#{Tty.green}Checking for admin privileges..."
@@ -48,19 +32,5 @@ class Installfest < Formula
     if MacOS::CLT.outdated?
       raise StandardError, "xcode"
     end
-
-    ### pre-install
-    # software updates
-    # remove rvm
-    # remove macports
-
-    ### install
-    # move/config/symlink config files
-    # install dependencies
-    #
-
-    ### post-install
-    #
-
   end
 end

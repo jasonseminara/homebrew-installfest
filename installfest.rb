@@ -1,15 +1,14 @@
 class Installfest < Formula
-  desc "The premiere installer for WDI NYC"
+  desc "The installer for WDI NYC"
   homepage "https://git.generalassemb.ly/wdi-nyc/installfest"
-  url "https://git.generalassemb.ly/wdi-nyc/installfest/archive/master.zip"
+  url "https://git.generalassemb.ly/wdi-nyc/installfest/archive/homebrew.zip"
   version "2"
-  sha256 "6e033713d93dce57ab80207b3c9a9076e37d6b4339bc7f476ae2b6b2af3529f4"
+  sha256 "ec1102c0df9d9a79355d025e85bd78f418381f78618eff54a93575f115aaf338"
 
   bottle :unneeded
 
   def install
     ohai "#{Tty.blue}Welcome to WDI Installfest!"
-
     #######
     ### pre-flight
 
@@ -53,34 +52,54 @@ class Installfest < Formula
           Exiting...
       EOS
     end
-    ohai "\t#{Tty.green}done!"
+    ohai "#{Tty.green}done!"
 
     # check for command-line tools
-    ohai "#{Tty.green}Checking for XCode Command Line Tools..."
-    system "xcode-select", "--install" if MacOS::CLT.outdated?
-    ohai "XCode"
+    print "\t#{Tty.green}Checking for XCode Command Line Tools..."
+    if MacOS::CLT.outdated?
+      system "xcode-select", "--install"
+    else
+      ohai "#{Tty.green}up to date!"
+    end
 
     # software updates
-    ohai "#{Tty.green}Running software update on Mac OS..."
+    print "\t#{Tty.green}Running software update on Mac OS..."
     # system "softwareupdate", "-ir"
-    ohai "#{Tty.green}Software updated!"
+    ohai "#{Tty.green}Updated!"
 
     # ensure user owns their home folder
-    ohai "#{Tty.green}Ensuring the current user owns their home folder..."
+    print "\t#{Tty.green}Ensuring the current user owns their home folder..."
     # system "chown", "-R", ENV['LOGNAME'], "/Users/#{ENV['LOGNAME']}"
-    ohai "#{Tty.green}Home directory owned!"
+    ohai "#{Tty.green}done!"
 
     ### pre-install
     # remove rvm
-    ohai "#{Tty.green}Removing RVM..."
+
     if quiet_system "hash rvm"
-      ohai "rvm installed"
+      print "\t#{Tty.green}Removing RVM..."
+      system "rvm", "implode"
+      system "rm", "-rf", "~/.rvm"
+      ohai "#{Tty.green}done!"
+    else
+      print "\t#{Tty.green}RVM not installed"
     end
-    ohai "#{Tty.green}rvm removed!"
+
     # remove macports
+    if quiet_system "hash port" or quiet_system "find", "/opt/local", "-iname", "macports"
+      system "scripts/mac/macports_remove.sh"
+    else
+      ohai "#{Tty.green}Macports not installed..."
+    end
+
+    # TODO: github keys...
+
 
     ### install
     # move/config/symlink config files
+    bin.install "settings/dotfiles/bash_prompt.sh"
+    bin.install "settings/dotfiles/welcome_prompt.sh"
+
+    # ln_s "#{bin}/bash_prompt.sh", "~/bash_prompt.sh", force:true
     # install dependencies
     #
 

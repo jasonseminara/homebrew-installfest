@@ -8,6 +8,7 @@ class Installfest < Formula
   bottle :unneeded
 
   def install
+    $HOME = Pathname.new('~/');
     ohai "#{Tty.blue}Welcome to WDI Installfest!"
     #######
     ### pre-flight
@@ -75,20 +76,49 @@ class Installfest < Formula
     ### pre-install
     # remove rvm
 
-    if quiet_system "hash rvm"
+    rvm = $HOME/'.rvm' ##/#
+    #
+
+    if quiet_system "hash rvm" or rvm.exist?
       print "\t#{Tty.green}Removing RVM..."
       system "rvm", "implode"
-      system "rm", "-rf", "~/.rvm"
+      rvm.rmtree
       ohai "#{Tty.green}done!"
     else
-      print "\t#{Tty.green}RVM not installed"
+      ohai "\t#{Tty.green}RVM not installed"
     end
 
+
+  # Uninstall Macports b/c we are using Homebrew
+  # http://guide.macports.org/chunked/installing.macports.uninstalling.html
+    macports = Pathname.new('/opt/local/macports')
     # remove macports
-    if quiet_system "hash port" or quiet_system "find", "/opt/local", "-iname", "macports"
-      system "scripts/mac/macports_remove.sh"
+    if quiet_system 'hash port' or macports.exist?
+      # remove each subdirectory of macports
+      macports.each_child(&:rmtree)
+
+      # gather all associated files/folders
+      folders = %w(
+        /opt/local
+        /Applications/DarwinPorts
+        /Applications/MacPorts
+        /Library/StartupItems/DarwinPortsStartup
+        /Library/Tcl/darwinports1.0
+        /Library/Tcl/macports1.0
+        ~/.macports
+      )
+
+      files = Dir[
+        '/Library/LaunchDaemons/org.macports.*',
+        '/Library/Receipts/DarwinPorts*.pkg',
+        '/Library/Receipts/MacPorts*.pkg',
+      ]
+
+      # remove all the above files
+      FileUtils.rm_rf [*folders, *files]
+
     else
-      ohai "#{Tty.green}Macports not installed..."
+      ohai "\t#{Tty.green}Macports not installed..."
     end
 
     # TODO: github keys...

@@ -1,4 +1,7 @@
+# require "cask/lib/hbc/system_command"
+
 class Installfest < Formula
+
   desc "The installer for WDI NYC"
   homepage "https://git.generalassemb.ly/wdi-nyc/installfest"
   url "https://git.generalassemb.ly/wdi-nyc/installfest/archive/homebrew.zip"
@@ -7,9 +10,14 @@ class Installfest < Formula
 
   bottle :unneeded
 
+  depends_on :macos => :sierra
+  depends_on :xcode
+
   def install
     $HOME = Pathname.new('~/');
-    ohai "#{Tty.blue}Welcome to WDI Installfest!"
+    oh1 "#{Tty.blue}Welcome to WDI Installfest!"
+
+    # ohai Hbc::SystemCommand.new "/bin/rm", {sudo:true}
     #######
     ### pre-flight
 
@@ -56,17 +64,17 @@ class Installfest < Formula
     ohai "#{Tty.green}done!"
 
     # check for command-line tools
-    print "\t#{Tty.green}Checking for XCode Command Line Tools..."
-    if MacOS::CLT.outdated?
-      system "xcode-select", "--install"
-    else
-      ohai "#{Tty.green}up to date!"
-    end
+    # print "\t#{Tty.green}Checking for XCode Command Line Tools..."
+    # if MacOS::CLT.outdated?
+    #   system "xcode-select", "--install"
+    # else
+    #   ohai "#{Tty.green}up to date!"
+    # end
 
-    # software updates
-    print "\t#{Tty.green}Running software update on Mac OS..."
-    # system "softwareupdate", "-ir"
-    ohai "#{Tty.green}Updated!"
+    # # software updates
+    # print "\t#{Tty.green}Running software update on Mac OS..."
+    # # system "softwareupdate", "-ir"
+    # ohai "#{Tty.green}Updated!"
 
     # ensure user owns their home folder
     print "\t#{Tty.green}Ensuring the current user owns their home folder..."
@@ -94,29 +102,38 @@ class Installfest < Formula
     macports = Pathname.new('/opt/local/macports')
     # remove macports
     if quiet_system 'hash port' or macports.exist?
-      # remove each subdirectory of macports
-      macports.each_child(&:rmtree)
+      ohai "\t#{Tty.green}Removing macports..."
 
+      # remove_macports = Hbc::SystemCommand.new("/bin/rm", sudo: true, args: ["-rf", macports.to_s])
+
+
+      # remove each subdirectory of macports
+      # sudo port -fp uninstall installed
       # gather all associated files/folders
-      folders = %w(
+
+      files = Dir[*%w(
         /opt/local
         /Applications/DarwinPorts
         /Applications/MacPorts
         /Library/StartupItems/DarwinPortsStartup
         /Library/Tcl/darwinports1.0
         /Library/Tcl/macports1.0
+        /Library/LaunchDaemons/org.macports.*
+        /Library/Receipts/DarwinPorts*.pkg
+        /Library/Receipts/MacPorts*.pkg
         ~/.macports
-      )
+      )]
 
-      files = Dir[
-        '/Library/LaunchDaemons/org.macports.*',
-        '/Library/Receipts/DarwinPorts*.pkg',
-        '/Library/Receipts/MacPorts*.pkg',
-      ]
-
+      macports.each_child(&:rmtree)
+      # ohai macports.owned?
+      # TODO: add warnings to dynamic shell script...
+      # remove_macports.run!
       # remove all the above files
-      FileUtils.rm_rf [*folders, *files]
 
+      FileUtils.rm_rf(*files)
+      files.each do |f|
+        opoo "Cannot remove #{f}! Use the cleanup script to remove them with `sudo`"
+      end
     else
       ohai "\t#{Tty.green}Macports not installed..."
     end
@@ -137,4 +154,5 @@ class Installfest < Formula
     #
 
   end
+
 end

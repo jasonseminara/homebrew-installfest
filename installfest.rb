@@ -10,6 +10,7 @@ class Installfest < Formula
 
   bottle :unneeded
 
+  # We'll only allow sierra and above.
   depends_on :macos => :sierra
   depends_on :xcode
 
@@ -127,7 +128,8 @@ class Installfest < Formula
       macports.each_child(&:rmtree)
       # ohai macports.owned?
       # TODO: add warnings to dynamic shell script...
-      # remove_macports.run!
+      # or
+      # TODO: remove_macports.run!
       # remove all the above files
 
       FileUtils.rm_rf(*files)
@@ -139,6 +141,7 @@ class Installfest < Formula
     end
 
     # TODO: github keys...
+
 
 
     ### install

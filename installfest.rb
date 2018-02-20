@@ -6,7 +6,7 @@ class Installfest < Formula
   homepage "https://git.generalassemb.ly/wdi-nyc/installfest"
   url "https://git.generalassemb.ly/wdi-nyc/installfest/archive/homebrew.zip"
   version "2"
-  sha256 "ec1102c0df9d9a79355d025e85bd78f418381f78618eff54a93575f115aaf338"
+  sha256 "e78c801835668dc5d5ac58577bc9c29442903a309cbe7469e14598407826efc2"
 
   bottle :unneeded
 
